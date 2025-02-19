@@ -2,12 +2,14 @@ import { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../Context/ShopContext";
 import { Link, useNavigate } from "react-router-dom";
 
+
 const Dashboard = () => {
   const { products, setCategory } = useContext(ShopContext);
   const [searchQuery, setSearchQuery] = useState("");
   const [categories, setCategories] = useState([]);
   const [user, setUser] = useState(null);
   const [showMore, setShowMore] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const navigate = useNavigate();
 
   // Fetch categories from DummyJSON API
@@ -54,33 +56,47 @@ const Dashboard = () => {
   const otherCategories = categories.filter(cat => !mainCategories.includes(cat));
 
   return (
-    <div className="flex">
-      {/* Sidebar */}
-      <aside className="w-64 bg-gray-900 text-white h-screen p-6">
-        <h2 className="text-xl font-bold mb-4">Categories</h2>
-        <ul>
+    <div className="flex flex-col min-h-screen">
+      {/* Navbar */}
+      <nav className="bg-gray-900 text-white p-4 flex justify-between items-center">
+        {/* Left Side - Profile */}
+        <div className="relative">
+          <button onClick={() => setShowProfile(!showProfile)} className="flex items-center gap-2">
+            {/* <FaUserCircle size={24} /> */}
+            <span>{user.name}</span>
+          </button>
+          {showProfile && (
+            <div className="absolute left-0 mt-2 bg-white text-black p-4 rounded shadow-lg w-48">
+              <p className="font-bold">{user.name}</p>
+              <p className="text-sm text-gray-600">{user.email}</p>
+              <button onClick={() => setShowProfile(false)} className="mt-2 text-blue-500 underline">Close</button>
+            </div>
+          )}
+        </div>
+
+        {/* Middle - Categories */}
+        <div className="flex gap-4">
           {mainCategories.map((category, index) => (
-            <li 
+            <button 
               key={index} 
-              className="cursor-pointer mb-2"
+              className="text-white hover:text-gray-300"
               onClick={() => setCategory(category)}
             >
               {category.charAt(0).toUpperCase() + category.slice(1)}
-            </li>
+            </button>
           ))}
-
           {/* More Dropdown */}
           {otherCategories.length > 0 && (
-            <li className="cursor-pointer mb-2 relative">
+            <div className="relative">
               <button onClick={() => setShowMore(!showMore)} className="text-blue-400">
                 More ▼
               </button>
               {showMore && (
-                <ul className="absolute left-0 mt-2 bg-gray-800 p-2 rounded shadow-lg">
+                <ul className="absolute left-0 mt-2 bg-gray-800 p-2 rounded shadow-lg w-48">
                   {otherCategories.map((category, index) => (
                     <li 
                       key={index} 
-                      className="cursor-pointer p-2 hover:bg-gray-700 rounded"
+                      className="cursor-pointer p-2 hover:bg-gray-700 rounded text-white"
                       onClick={() => {
                         setCategory(category);
                         setShowMore(false);
@@ -91,45 +107,53 @@ const Dashboard = () => {
                   ))}
                 </ul>
               )}
-            </li>
-          )}
-        </ul>
-      </aside>
-
-      {/* Main Content */}
-      <div className="flex-1 p-6">
-        {/* Navbar */}
-        <header className="flex justify-between mb-4">
-          <input
-            type="text"
-            placeholder="Search products..."
-            className="border p-2 rounded w-1/2"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <div className="flex gap-4">
-            <Link to="/wishlist" className="bg-pink-500 text-white px-4 py-2 rounded">❤️ Wishlist</Link>
-            <Link to="/cart" className="bg-blue-500 text-white px-4 py-2 rounded">🛒 Cart</Link>
-          </div>
-        </header>
-
-        {/* Product Listing */}
-        <div className="grid grid-cols-4 gap-4">
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map((product) => (
-              <div key={product.id} className="border p-4 rounded shadow-lg">
-                <img src={product.thumbnail} alt={product.title} className="w-full h-40 object-cover" />
-                <h2 className="text-lg font-bold">{product.title}</h2>
-                <p className="text-sm">{product.description.substring(0, 50)}...</p>
-                <p className="font-bold">${product.price}</p>
-                <Link to={`/product/${product.id}`} className="text-blue-500">View Details</Link>
-              </div>
-            ))
-          ) : (
-            <p>No products found.</p>
+            </div>
           )}
         </div>
-        <button onClick={handleLogout} className="mt-4 bg-red-500 text-white px-4 py-2 rounded">Logout</button>
+
+        {/* Right Side - Cart, Wishlist, Logout */}
+        <div className="flex gap-4">
+          <Link to="/wishlist" className="flex items-center gap-1">
+            {/* <FaHeart size={20} className="text-pink-400" /> */}
+             Wishlist
+          </Link>
+          <Link to="/cart" className="flex items-center gap-1">
+            {/* <FaShoppingCart size={20} className="text-blue-400" />  */}
+            Cart
+          </Link>
+          <button onClick={handleLogout} className="flex items-center gap-1 text-red-500">
+            {/* <FaSignOutAlt size={20} /> */}
+             Logout
+          </button>
+        </div>
+      </nav>
+
+      {/* Search Bar */}
+      <div className="p-4 flex justify-center">
+        <input
+          type="text"
+          placeholder="Search products..."
+          className="border p-2 rounded w-1/2"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
+
+      {/* Product Listing */}
+      <div className="p-6 grid grid-cols-4 gap-4">
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
+            <div key={product.id} className="border p-4 rounded shadow-lg">
+              <img src={product.thumbnail} alt={product.title} className="w-full h-40 object-cover" />
+              <h2 className="text-lg font-bold">{product.title}</h2>
+              <p className="text-sm">{product.description.substring(0, 50)}...</p>
+              <p className="font-bold">${product.price}</p>
+              <Link to={`/product/${product.id}`} className="text-blue-500">View Details</Link>
+            </div>
+          ))
+        ) : (
+          <p>No products found.</p>
+        )}
       </div>
     </div>
   );
