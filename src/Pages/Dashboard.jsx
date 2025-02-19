@@ -1,7 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../Context/ShopContext";
 import { Link, useNavigate } from "react-router-dom";
-
+import shop from "../assets/image/shopping.png"
+import cart from "../assets/image/84.png"
+import profile from "../assets/image/Contact.png"
 
 const Dashboard = () => {
   const { products, setCategory } = useContext(ShopContext);
@@ -63,7 +65,7 @@ const Dashboard = () => {
         <div className="relative">
           <button onClick={() => setShowProfile(!showProfile)} className="flex items-center gap-2">
             {/* <FaUserCircle size={24} /> */}
-            <span>{user.name}</span>
+            <img className="w-10" src={profile} alt="" />
           </button>
           {showProfile && (
             <div className="absolute left-0 mt-2 bg-white text-black p-4 rounded shadow-lg w-48">
@@ -98,7 +100,7 @@ const Dashboard = () => {
                       key={index} 
                       className="cursor-pointer p-2 hover:bg-gray-700 rounded text-white"
                       onClick={() => {
-                        setCategory(category);
+                        setCategory(category.slug);
                         setShowMore(false);
                       }}
                     >
@@ -114,11 +116,11 @@ const Dashboard = () => {
         {/* Right Side - Cart, Wishlist, Logout */}
         <div className="flex gap-4">
           <Link to="/wishlist" className="flex items-center gap-1">
-            {/* <FaHeart size={20} className="text-pink-400" /> */}
+            <img className="w-10" src={shop} alt="" />
              Wishlist
           </Link>
           <Link to="/cart" className="flex items-center gap-1">
-            {/* <FaShoppingCart size={20} className="text-blue-400" />  */}
+          <img className="w-10" src={cart} alt="" />
             Cart
           </Link>
           <button onClick={handleLogout} className="flex items-center gap-1 text-red-500">
