@@ -12,7 +12,7 @@ const Login = () => {
 
     // Get stored users from localStorage
     const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
-
+    
     // Find the matching user
     const loggedInUser = storedUsers.find(
       (u) => u.email === email && u.password === password

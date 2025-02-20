@@ -166,11 +166,13 @@ const Dashboard = () => {
 
       
       {/* Product Listing */}
-      <div className="p-6 grid grid-cols-4 gap-5 bg-gray-300 ">
+      <div className="p-6 grid grid-cols-5 gap-5 bg-gray-300 ">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
-            <div key={product.id} className="border p-6 bg-white rounded-xl shadow-lg">
-              <img src={product.thumbnail} alt={product.title} className="w-full h-42 object-cover" />
+            <div key={product.id} className="border w-[37vh] h-[45vh] p-2 bg-white rounded-xl shadow-lg">
+              <div className="w-[25vh] h-[20vh] ml-6 " >
+              <img src={product.thumbnail} alt={product.title} className="w-full h-full  object-fill " />
+              </div>
               <h2 className="text-lg font-bold">{product.title}</h2>
               <p className="text-sm">{product.description.substring(0, 50)}...</p>
               <p className="font-bold">${product.price}</p>
