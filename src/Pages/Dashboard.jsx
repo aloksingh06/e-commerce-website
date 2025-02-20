@@ -12,10 +12,14 @@ const Dashboard = () => {
   const [user, setUser] = useState(null);
   const [showMore, setShowMore] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [loginUser, setloginUser] = useState('')
   const navigate = useNavigate();
-
+  const login = localStorage.getItem("login");
+ 
+  
   // Fetch categories from DummyJSON API
   useEffect(() => {
+    setloginUser(login);
     fetch("https://dummyjson.com/products/categories")
       .then((res) => res.json())
       .then((data) => {
@@ -36,10 +40,17 @@ const Dashboard = () => {
     product.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+//  if(loginUser){
+//   localStorage.removeItem("login");
+//  }
+//  else{
+//   setloginUser(login);
+//  }
+
   useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
     if (!loggedInUser) {
-      navigate("/login");
+      
     } else {
       setUser(loggedInUser);
     }
@@ -47,11 +58,16 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("login");
     alert("Logged out!");
-    navigate("/login");
+    // navigate("/login");
+    setloginUser('');
   };
-
-  if (!user) return null;
+ 
+  const handleLogIn = ()=>{
+    navigate("/login");
+  }
+  // if (!user) return null;
 
   // Define main categories to show directly
   const mainCategories = ["all", "mens-shirts", "womens-dresses", "smartphones", "laptops"];
@@ -89,10 +105,14 @@ const Dashboard = () => {
           <img className="w-10" src={cart} alt="" />
             Cart
           </Link>
-          <button onClick={handleLogout} className=" text-lg px-10 rounded-xl bg-white items-center  ">
-            {/* <FaSignOutAlt size={20} /> */}
+          {loginUser ? <button onClick={handleLogout} className=" text-lg px-4 rounded-xl bg-red-300 items-center  ">
+            
              Logout
-          </button>
+          </button> : <button onClick={handleLogIn} className=" text-lg px-10 rounded-xl bg-white items-center  ">
+            {/* <FaSignOutAlt size={20} /> */}
+             Login
+          </button>}
+          
         </div>
 
 
@@ -104,17 +124,11 @@ const Dashboard = () => {
       <nav className=" mt-2 bg-white  m-2 text-black rounded-lg p-4 flex justify-between items-center">
         {/* Left Side - Profile */}
         <div className="relative">
-          <button onClick={() => setShowProfile(!showProfile)} className="flex items-center gap-2">
+          <Link to={"/profile"} className="flex items-center gap-2">
             {/* <FaUserCircle size={24} /> */}
             <img className="w-10" src={profile} alt="" />
-          </button>
-          {showProfile &&  (
-            <div className="absolute left-10 top-[-5vh] mt-2 bg-gray-100 text-black p-2 rounded-xl shadow-lg w-48">
-              <p className="font-bold">{user.name}</p>
-              <p className="text-sm text-gray-600">{user.email}</p>
-              <button onClick={() => setShowProfile(false)} className="mt-2 text-blue-500 underline">Close</button>
-            </div>
-          )}
+          </Link>
+          
         </div>
 
         {/* Middle - Categories */}
@@ -180,7 +194,7 @@ const Dashboard = () => {
             </div>
           ))
         ) : (
-          <p>No products found.</p>
+          <p>Loading...</p>
         )}
       </div>
 

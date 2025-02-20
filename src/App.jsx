@@ -7,20 +7,22 @@ import ProductDetail from "./Pages/ProductDetails";
 import CartPage from "./Pages/CartPage";
 import Checkout from "./Pages/Checkout";
 import Wishlist from "./Pages/Wishlist";
+import Profile from "./Pages/Profile";
 
 function App() {
-  const isAuthenticated = localStorage.getItem("loggedInUser");
+  
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" />} />
+        <Route path="/" element={<Dashboard />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
   )

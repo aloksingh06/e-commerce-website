@@ -22,7 +22,7 @@ const Login = () => {
       localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
       alert("Login Successful!");
       navigate("/dashboard");
-      
+      localStorage.setItem("login", 'loggedIn');
     } else {
       alert("Invalid Credentials! Please check your email and password.");
     }
