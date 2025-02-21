@@ -1,11 +1,28 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 import { ShopContext } from "../Context/ShopContext";
+import { motion } from "framer-motion";
+
 
 const ProductDetail = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const { addToCart, addToWishlist } = useContext(ShopContext);
+
+  const [added, setAdded] = useState(false);
+  const handleClickCart = () => {
+    addToCart(product);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000); // 2 sec baad wapas "Add to Cart"
+  };
+
+  const [wishlist, setwishlist] = useState(false);
+  const handleClickWishlist = () => {
+    addToWishlist(product);
+    setwishlist(true);
+    setTimeout(() => setwishlist(false), 2000); // 2 sec baad wapas "Wishlist"
+  };
+
 
   useEffect(() => {
     fetch(`https://dummyjson.com/products/${id}`)
@@ -18,11 +35,11 @@ const ProductDetail = () => {
   if (!product) return <p>Loading...</p>;
 
   return ( 
-    <div className="w-full min-h-screen bg-gray-300 p-1">
+    <div className="w-full min-h-screen bg-gray-400 p-1">
 
-      <div className="p-5 m-10 bg-zinc-100 flex gap-20 rounded-xl justify-center">
+      <div className="p-5 m-2 bg-zinc-100 flex gap-20 rounded justify-center">
         <div className="w-[65vh] h-[60vh]  ">
-        <img src={product.images} alt={product.title} className=" w-full h-full object-fill relative top-[-8%]" />
+        <img src={product.thumbnail} alt={product.title} className=" w-full h-full object-fill relative top-[-8%]" />
         </div>
 
       <div className="flex flex-col gap-5  px-2 w-[50vw]" >
@@ -36,21 +53,45 @@ const ProductDetail = () => {
       <h3 className="text-xl"><span className="font-semibold" >Price:- </span> {product.minimumOrderQuantity}</h3>  
 
       <div className="flex gap-8" >
-      <button onClick={() => addToCart(product)} className="bg-blue-500 text-white px-4 py-2 rounded-lg">Add to Cart</button>
-      <button onClick={() => addToWishlist(product)} className="bg-pink-500 text-white px-4 py-2 rounded-lg ">❤️ Wishlist</button>
+      <motion.button
+      whileTap={{ scale: 0.9 }}
+      transition={{ duration: 0.1, ease: "easeInOut" }}
+      onClick={handleClickCart}
+      className={`px-4 py-2 rounded-lg ${
+        added ? "bg-green-500" : "bg-blue-500"
+      } text-white`}
+    >
+      {added ? "Added" : "Add to Cart"}
+    </motion.button>
+    <motion.button
+      whileTap={{ scale: 0.9 }}
+      transition={{ duration: 0.1, ease: "easeInOut" }}
+      onClick={handleClickWishlist}
+      className={`px-4 py-2 rounded-lg ${
+        wishlist ? "bg-green-500" : "bg-pink-500"
+      } text-white`}
+    >
+      {wishlist ? "Done" : "Wishlist"}
+    </motion.button>
       </div>
       </div>
 
 
       </div>
 
-     <div className="ml-10" >
-     <h1>Review</h1>
-    <div className="flex gap-5" >
+     <div className="m-2 w-[98vw] p-5  bg-zinc-100 rounded" >
+     <h1 className="text-2xl mb-3" >Review:-</h1>
+    <div className="flex gap-5 justify-between px-20" >
     {product.reviews.map((data,index)=>{
         return(
-          <div key={index} className="w-[30vh] h-[30vh] bg-blue-400">
-              
+          <div key={index} className="w-[50vh] h-[30vh] p-5 rounded-lg bg-gray-300">
+              <h3>Comment:  {data.comment} </h3>
+              <h3>Date:  {data.date} </h3>
+              <h3>Rating:  {data.rating} </h3>
+              <h3>reviewer Email:  {data.reviewerEmail} </h3>
+              <h3>Reviewer Name:  {data.reviewerName} </h3>
+
+
           </div>
         )
       })}
