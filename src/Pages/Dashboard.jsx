@@ -40,13 +40,7 @@ const Dashboard = () => {
     product.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-//  if(loginUser){
-//   localStorage.removeItem("login");
-//  }
-//  else{
-//   setloginUser(login);
-//  }
-
+//useEffect
   useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
     if (!loggedInUser) {
@@ -56,18 +50,23 @@ const Dashboard = () => {
     }
   }, [navigate]);
 
+
+  //handle logout button
   const handleLogout = () => {
     localStorage.removeItem("loggedInUser");
     localStorage.removeItem("login");
     alert("Logged out!");
-    // navigate("/login");
     setloginUser('');
   };
  
+
+  //handle Login button
   const handleLogIn = ()=>{
     navigate("/login");
   }
   // if (!user) return null;
+
+
 
   // Define main categories to show directly
   const mainCategories = ["all", "mens-shirts", "womens-dresses", "smartphones", "laptops"];

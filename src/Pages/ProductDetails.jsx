@@ -85,11 +85,12 @@ const ProductDetail = () => {
     {product.reviews.map((data,index)=>{
         return(
           <div key={index} className="w-[50vh] h-[30vh] p-5 rounded-lg bg-gray-300">
+             <h3> Name:  {data.reviewerName} </h3>
               <h3>Comment:  {data.comment} </h3>
-              <h3>Date:  {data.date} </h3>
+              <h3>Date:  {data.date.substring(0,10)} </h3>
               <h3>Rating:  {data.rating} </h3>
               <h3>reviewer Email:  {data.reviewerEmail} </h3>
-              <h3>Reviewer Name:  {data.reviewerName} </h3>
+             
 
 
           </div>
